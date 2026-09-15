@@ -1,0 +1,277 @@
+[{
+  "_id": {
+    "$oid": "6aa124f0cd487beadf4fbc7e"
+  },
+  "year": 2026,
+  "quarter": "Q1",
+  "submittedBy": {
+    "$oid": "6aa11f1bd5372d8b92e4c8c3"
+  },
+  "__v": 0,
+  "answeredCount": 7,
+  "answers": [
+    {
+      "questionNo": "3_0",
+      "question": "3_0",
+      "answer": "Dr. Suresh Kumar A"
+    },
+    {
+      "questionNo": "3_2",
+      "question": "3_2",
+      "answer": "Assistant Professor"
+    },
+    {
+      "questionNo": "3_4",
+      "question": "3_4",
+      "answer": "2023-06-06"
+    },
+    {
+      "questionNo": "17_0",
+      "question": "DOI Number",
+      "answer": "10.1038/s41598-018-31627-8"
+    },
+    {
+      "questionNo": "17_1",
+      "question": "Title of Paper",
+      "answer": "Promising post-consumer PET-derived activated carbon electrode material for non-enzymatic electrochemical determination of carbofuran hydrolysate"
+    },
+    {
+      "questionNo": "17_2",
+      "question": "Name(s) of Author(s)",
+      "answer": "Sureshkumar Ayyalusamy, Susmita Mishra & Vembu Suryanarayanan"
+    },
+    {
+      "questionNo": "17_3",
+      "question": "Department",
+      "answer": "Electrodics and Electrocatalysis Division"
+    },
+    {
+      "questionNo": "17_4",
+      "question": "Name of the Journal",
+      "answer": "Scientific Reports"
+    },
+    {
+      "questionNo": "17_5",
+      "question": "Date/Year of Publication",
+      "answer": "2018-03-09"
+    },
+    {
+      "questionNo": "17_6",
+      "question": "Page Number (Start-End)",
+      "answer": "431-534"
+    },
+    {
+      "questionNo": "17_7",
+      "question": "ISSN Number",
+      "answer": "2045-2322"
+    },
+    {
+      "questionNo": "17_9",
+      "question": "Impact Factor",
+      "answer": "4.8"
+    },
+    {
+      "questionNo": "17_10",
+      "question": "PDF of Published Paper",
+      "answer": "/uploads/faculty/1788945648372_s41598-018-31627-8.pdf"
+    },
+    {
+      "questionNo": "17_13",
+      "question": "Publication Level",
+      "answer": "International"
+    },
+    {
+      "questionNo": "19_1",
+      "question": "Name of the Author(s)",
+      "answer": "Ayyalusamy Sureshkumar, Mishra Susmita"
+    },
+    {
+      "questionNo": "19_0",
+      "question": "Name of the Book",
+      "answer": "Brazilian Journal of Chemical Engineering"
+    },
+    {
+      "questionNo": "19_2",
+      "question": "Name of the Publisher",
+      "answer": "Original publisher"
+    },
+    {
+      "questionNo": "19_3",
+      "question": "Title of the Chapter",
+      "answer": "OPTIMIZATION OF PREPARATION CONDITIONS FOR ACTIVATED CARBONS FROM POLYETHYLENE TEREPHTHALATE USING RESPONSE SURFACE METHODOLOGY"
+    },
+    {
+      "questionNo": "19_4",
+      "question": "Date/Year Published",
+      "answer": "2017-06-09"
+    },
+    {
+      "questionNo": "19_5",
+      "question": "ISBN Number",
+      "answer": "0104-6632"
+    },
+    {
+      "questionNo": "19_6",
+      "question": "PDF Scanned Front Cover of the Book / Chapter",
+      "answer": "/uploads/faculty/1788945648428_download.pdf"
+    },
+    {
+      "questionNo": "19_8",
+      "question": "Publication Level",
+      "answer": "International"
+    },
+    {
+      "questionNo": "19_9",
+      "question": "Page Number (From-To)",
+      "answer": "231-270"
+    },
+    {
+      "questionNo": "34_1",
+      "question": "Degree",
+      "answer": "PhD Full Time"
+    },
+    {
+      "questionNo": "34_0",
+      "question": "Name of the Scholar",
+      "answer": "Dr. Suresh Kumar A"
+    },
+    {
+      "questionNo": "34_2",
+      "question": "Name of the Guide",
+      "answer": "Dr. S. Mishra"
+    },
+    {
+      "questionNo": "34_3",
+      "question": "Title of the Thesis",
+      "answer": "electrochemical sensor for carbofuran using PET-activated carbon modified glassy carbon electrode (1st report for electrochemical detection of carbofuran using glassy carbon electrode modified with activated carbon)."
+    },
+    {
+      "questionNo": "34_4",
+      "question": "Date/Year Registration of Scholar",
+      "answer": "2012-06-05"
+    },
+    {
+      "questionNo": "34_5",
+      "question": "Date of Award of PhD/DM/MDS/M.Ch",
+      "answer": "2020-07-07"
+    },
+    {
+      "questionNo": "34_8",
+      "question": "Nature of Fellowship",
+      "answer": ""
+    },
+    {
+      "questionNo": "31_0",
+      "question": "Name of the Teacher Awarded Fellowship",
+      "answer": "Dr. Suresh Kumar A"
+    },
+    {
+      "questionNo": "31_1",
+      "question": "National / International",
+      "answer": "National"
+    },
+    {
+      "questionNo": "31_2",
+      "question": "Name of the Award/Fellowship",
+      "answer": "DST Travel grant Award"
+    },
+    {
+      "questionNo": "31_4",
+      "question": "Degree/Fellowship Awarded From (University/Professional Body)",
+      "answer": "Holderness"
+    },
+    {
+      "questionNo": "31_5",
+      "question": "Date/Year of Award",
+      "answer": "2023-10-10"
+    },
+    {
+      "questionNo": "30_0",
+      "question": "Name of the Teacher",
+      "answer": "Dr. Suresh Kumar A"
+    },
+    {
+      "questionNo": "30_1",
+      "question": "Nature of Award",
+      "answer": "National Award"
+    },
+    {
+      "questionNo": "30_2",
+      "question": "Name of the Awarding Agency",
+      "answer": "Ministry of Education"
+    },
+    {
+      "questionNo": "30_3",
+      "question": "Date/Year of Award",
+      "answer": "2024-05-09"
+    },
+    {
+      "questionNo": "37_0",
+      "question": "Date From",
+      "answer": "2026-05-10"
+    },
+    {
+      "questionNo": "37_1",
+      "question": "Date To",
+      "answer": "2026-05-15"
+    },
+    {
+      "questionNo": "37_2",
+      "question": "Name of the Teacher",
+      "answer": "Dr. Suresh kumar A"
+    },
+    {
+      "questionNo": "37_3",
+      "question": "Name of the Programme",
+      "answer": "Advanced Faculty development programme on E-content"
+    },
+    {
+      "questionNo": "21_0",
+      "question": "Title of the Innovation",
+      "answer": "Post consumer PET derived low cost electrochemical sensor for environmental pollutant detection"
+    },
+    {
+      "questionNo": "21_1",
+      "question": "Award Level",
+      "answer": "National"
+    },
+    {
+      "questionNo": "21_2",
+      "question": "Name of the Awardee",
+      "answer": "Dr. Suresh kumar A"
+    },
+    {
+      "questionNo": "21_3",
+      "question": "Name of the Awarding Agency",
+      "answer": "National Innovation Foundation"
+    },
+    {
+      "questionNo": "21_5",
+      "question": "Date/Year of Award",
+      "answer": "2026-03-15"
+    },
+    {
+      "questionNo": "21_6",
+      "question": "Award Category",
+      "answer": "Teacher"
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-09-09T09:20:48.474Z"
+  },
+  "deanRemarks": "",
+  "department": "Computer Science and Medical Engineering (Artificial Intelligence and Data Analytics)",
+  "hodRemarks": "",
+  "role": "faculty",
+  "school": "Engineering and Technology",
+  "status": "Pending HOD Approval",
+  "submittedByEmail": "drsureshkumar@gmail.com",
+  "submittedByName": "Dr. Suresh Kumar A",
+  "tableData": {},
+  "totalQuestions": 19,
+  "unansweredCount": 12,
+  "updatedAt": {
+    "$date": "2026-09-09T09:20:48.474Z"
+  },
+  "uploadedFiles": []
+}]

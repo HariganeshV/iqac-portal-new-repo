@@ -1,0 +1,372 @@
+[
+  {
+    "submittedBy": {
+      "$oid": "6aa154e5ce56d8a51ebec9ff"
+    },
+    "quarter": "Q1",
+    "year": 2026,
+    "answeredCount": 9,
+    "answers": [
+      {
+        "questionNo": "3_0",
+        "question": "3_0",
+        "answer": "Nandakumar Venkatesan"
+      },
+      {
+        "questionNo": "3_2",
+        "question": "3_2",
+        "answer": "Associate Professor"
+      },
+      {
+        "questionNo": "3_4",
+        "question": "3_4",
+        "answer": "2026-09-09"
+      },
+      {
+        "questionNo": "34_0",
+        "question": "Name of the Scholar",
+        "answer": "Nandakumar Venkatesan"
+      },
+      {
+        "questionNo": "34_1",
+        "question": "Degree",
+        "answer": "PhD Full Time"
+      },
+      {
+        "questionNo": "31_1",
+        "question": "National / International",
+        "answer": "National"
+      },
+      {
+        "questionNo": "31_2",
+        "question": "Name of the Award/Fellowship",
+        "answer": "First Place in the oral presentation"
+      },
+      {
+        "questionNo": "31_4",
+        "question": "Degree/Fellowship Awarded From (University/Professional Body)",
+        "answer": "Sri Ramachandra Institute of Higher education and Research"
+      },
+      {
+        "questionNo": "31_5",
+        "question": "Date/Year of Award",
+        "answer": "2025-07-25"
+      },
+      {
+        "questionNo": "31_7",
+        "question": "Any Financial Support from the University",
+        "answer": "No"
+      },
+      {
+        "questionNo": "30_2",
+        "question": "Name of the Awarding Agency",
+        "answer": "Best paper Award"
+      },
+      {
+        "questionNo": "30_1",
+        "question": "Nature of Award",
+        "answer": "National Award"
+      },
+      {
+        "questionNo": "30_0",
+        "question": "Name of the Teacher",
+        "answer": "Nandakumar Venkatesan"
+      },
+      {
+        "questionNo": "30_3",
+        "question": "Date/Year of Award",
+        "answer": "2025-06-14"
+      },
+      {
+        "questionNo": "22_2",
+        "question": "Title of the Award",
+        "answer": "ANRF- Prime Minister Early Career Research Grant"
+      },
+      {
+        "questionNo": "22_1",
+        "question": "Name(s) of Teacher(s) Who Received the Award",
+        "answer": "Nandakumar Venkatesan"
+      },
+      {
+        "questionNo": "22_0",
+        "question": "Date/Year",
+        "answer": "2025-07-15"
+      },
+      {
+        "questionNo": "22_3",
+        "question": "Award Level",
+        "answer": "National"
+      },
+      {
+        "questionNo": "22_4",
+        "question": "Name of the Awarding Agency",
+        "answer": " Anusandhan National Research Foundation, Government of India, 2025"
+      },
+      {
+        "questionNo": "31_0",
+        "question": "Name of the Teacher Awarded Fellowship",
+        "answer": "Nandakumar Venkatesan "
+      },
+      {
+        "questionNo": "19_0",
+        "question": "Name of the Book",
+        "answer": "Tissue Engineering and Regenerative medicine"
+      },
+      {
+        "questionNo": "19_1",
+        "question": "Name of the Author(s)",
+        "answer": "Gokulnath A, Namasivayanaveen S, Nandakumar V"
+      },
+      {
+        "questionNo": "19_2",
+        "question": "Name of the Publisher",
+        "answer": "Springer Nature Link"
+      },
+      {
+        "questionNo": "19_3",
+        "question": "Title of the Chapter",
+        "answer": "Harnessing Artificial Intelligence for Regeneration of Endometrium in Asherman’s Syndrome"
+      },
+      {
+        "questionNo": "19_4",
+        "question": "Date/Year Published",
+        "answer": "2026-06-04"
+      },
+      {
+        "questionNo": "19_5",
+        "question": "ISBN Number",
+        "answer": "2212-5469"
+      },
+      {
+        "questionNo": "19_6",
+        "question": "PDF Scanned Front Cover of the Book / Chapter",
+        "answer": "/uploads/faculty/1788945661619_Tissue Engineering and Regenerative medicine.pdf"
+      },
+      {
+        "questionNo": "19_7",
+        "question": "Indexing Database",
+        "answer": ["Scopus"]
+      },
+      {
+        "questionNo": "19_8",
+        "question": "Publication Level",
+        "answer": "International"
+      },
+      {
+        "questionNo": "19_9",
+        "question": "Page Number (From-To)",
+        "answer": " 791–813 "
+      },
+      {
+        "questionNo": "19_10",
+        "question": "Correlated to SDG Goals",
+        "answer": ["4. Quality Education"]
+      },
+      {
+        "questionNo": "18_0",
+        "question": "Name of the Patentee / Copyright Awardee",
+        "answer": "Geetha V, Nandakumar V, Mukesh D"
+      },
+      {
+        "questionNo": "18_1",
+        "question": "Patent / Copyright",
+        "answer": "Patent"
+      },
+      {
+        "questionNo": "18_2",
+        "question": "Status",
+        "answer": "Granted"
+      },
+      {
+        "questionNo": "18_3",
+        "question": "Patent / Copyright Number",
+        "answer": "348864"
+      },
+      {
+        "questionNo": "18_4",
+        "question": "Patent Title",
+        "answer": " Process of Blending cyclic (α or β) glucan compound with synthetic or biopolymer for use as drug carrier"
+      },
+      {
+        "questionNo": "18_5",
+        "question": "Date/Year of Patent Awarded / Published",
+        "answer": "2020-06-16"
+      },
+      {
+        "questionNo": "18_9",
+        "question": "Correlated to SDG Goals",
+        "answer": [
+          "3. Good Health and Well-Being",
+          "9. Industry, Innovation and Infrastructure",
+          "12. Responsible Consumption and Production"
+        ]
+      },
+      {
+        "questionNo": "11_3",
+        "question": "Department of Principal Investigator",
+        "answer": "Computer Science & Medical Engineering"
+      },
+      {
+        "questionNo": "11_6",
+        "question": "Name of the Funding Agency",
+        "answer": "ANRF-PMECRG (Anusandhan National Research Foundation)"
+      },
+      {
+        "questionNo": "11_9",
+        "question": "Sanctioned Amount for the Year (Rs.)",
+        "answer": "14408714"
+      },
+      {
+        "questionNo": "11_8",
+        "question": "Total Grant (Rs.)",
+        "answer": "14408714"
+      },
+      {
+        "questionNo": "11_10",
+        "question": "Project Level",
+        "answer": "National"
+      },
+      {
+        "questionNo": "11_12",
+        "question": "Correlated to SDG Goals",
+        "answer": ["3. Good Health and Well-Being"]
+      },
+      {
+        "questionNo": "11_0",
+        "question": "Title of the Project",
+        "answer": "Periodontium Targeted anti-miR Niosomal Delivery for Periodontal Regeneration in Indian population"
+      },
+      {
+        "questionNo": "11_1",
+        "question": "Type of Project",
+        "answer": "Major"
+      },
+      {
+        "questionNo": "11_2",
+        "question": "Name of the Principal Investigator",
+        "answer": "Nandakumar V"
+      },
+      {
+        "questionNo": "13_0",
+        "question": "Title of the Project",
+        "answer": "Implantable intra-uterine sensor for real-time monitoring of the endometrium for Asherman's Syndrome"
+      },
+      {
+        "questionNo": "13_1",
+        "question": "National / International Collaboration",
+        "answer": "National"
+      },
+      {
+        "questionNo": "13_2",
+        "question": "Name of the Principal Investigator",
+        "answer": "Nandakumar V"
+      },
+      {
+        "questionNo": "13_3",
+        "question": "Department of Principal Investigator",
+        "answer": "Computer Science & Medical Engineering"
+      },
+      {
+        "questionNo": "13_6",
+        "question": "Collaborating Institution and Name of Funding Agency",
+        "answer": "IIT Madras (IITM-Pravarthak) / DST, Government of India"
+      },
+      {
+        "questionNo": "13_8",
+        "question": "Total Grant (Rs.)",
+        "answer": "4111800"
+      },
+      {
+        "questionNo": "13_9",
+        "question": "Sanctioned Amount for the Year (Rs.)",
+        "answer": "4111800"
+      },
+      {
+        "questionNo": "13_11",
+        "question": "Correlated to SDG Goals",
+        "answer": ["3. Good Health and Well-Being"]
+      },
+      {
+        "questionNo": "30_5",
+        "question": "Correlated to SDG Goals",
+        "answer": [
+          "3. Good Health and Well-Being",
+          "4. Quality Education"
+        ]
+      },
+      {
+        "questionNo": "17_1",
+        "question": "Title of Paper",
+        "answer": "Contribution of Underlying Connective Tissue Cells to Taste Buds in Mouse Tongue and Soft Palate."
+      },
+      {
+        "questionNo": "17_0",
+        "question": "DOI Number",
+        "answer": "10.1371/journal.pone.0146475"
+      },
+      {
+        "questionNo": "17_2",
+        "question": "Name(s) of Author(s)",
+        "answer": "Boggs K, Nandakumar V, Mederacke I, Komatsu Y, Stice S, Schwabe RF, Mistretta CM, Mishina Y, Liu HX"
+      },
+      {
+        "questionNo": "17_4",
+        "question": "Name of the Journal",
+        "answer": "PLoS ONE"
+      },
+      {
+        "questionNo": "17_3",
+        "question": "Department",
+        "answer": "Computer Science & Medical Engineering"
+      },
+      {
+        "questionNo": "17_5",
+        "question": "Date/Year of Publication",
+        "answer": "2016-01-01"
+      },
+      {
+        "questionNo": "17_7",
+        "question": "ISSN Number",
+        "answer": "1932-6203"
+      },
+      {
+        "questionNo": "17_8",
+        "question": "Indexing Database",
+        "answer": ["Scopus", "PubMed"]
+      },
+      {
+        "questionNo": "17_13",
+        "question": "Publication Level",
+        "answer": "International"
+      },
+      {
+        "questionNo": "17_14",
+        "question": "Correlated to SDG Goals",
+        "answer": ["3. Good Health and Well-Being"]
+      },
+      {
+        "questionNo": "17_6",
+        "question": "Page Number (Start-End)",
+        "answer": "305–311"
+      }
+    ],
+    "deanRemarks": "",
+    "department": "Computer Science and Medical Engineering (Artificial Intelligence and Data Analytics)",
+    "hodRemarks": "",
+    "role": "faculty",
+    "school": "Engineering and Technology",
+    "status": "Approved by Dean",
+    "submittedByEmail": "nandooniran@gmail.com",
+    "submittedByName": "Nandakumar Venkatesan",
+    "tableData": {},
+    "totalQuestions": 19,
+    "unansweredCount": 10,
+    "createdAt": {
+      "$date": "2026-09-09T09:21:01.634Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-09T09:27:24.331Z"
+    },
+    "uploadedFiles": []
+  }
+]
