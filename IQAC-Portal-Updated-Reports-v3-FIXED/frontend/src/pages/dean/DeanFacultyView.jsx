@@ -4,7 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import DeanLayout from "../../layouts/DeanLayout";
 
 import {
-  getFacultySubmissionById
+  getFacultySubmissionById,
+  reviewQuestion
 } from "../../api/deanApi";
 
 import facultyQuestions from "../../data/facultyQuestions";
@@ -129,6 +130,20 @@ function DeanFacultyView() {
 
     );
 
+  };
+
+  const handleQuestionReview = async (questionNo, rejected) => {
+    const remarks = rejected
+      ? window.prompt("Enter rejection reason for this question")
+      : "";
+    if (rejected && remarks === null) return;
+    try {
+      await reviewQuestion(id, questionNo, rejected, remarks || "");
+      await loadSubmission();
+    } catch (error) {
+      console.error(error);
+      alert("Question review failed");
+    }
   };
 
   // ============================
@@ -459,6 +474,8 @@ function DeanFacultyView() {
                     Answer
                   </th>
 
+                  <th style={thStyle}>Review</th>
+
                 </tr>
 
               </thead>
@@ -482,6 +499,7 @@ function DeanFacultyView() {
 
                     <tr
                       key={index}
+                      style={{ background: submission.changedQuestionNos?.includes(`${section.sectionNo}_${index}`) ? "#fef3c7" : "transparent" }}
                     >
 
                       <td style={tdStyle}>
@@ -514,6 +532,23 @@ function DeanFacultyView() {
 
                         {renderAnswer(value)}
 
+                      </td>
+
+                      <td style={tdStyle}>
+                        {submission.changedQuestionNos?.includes(`${section.sectionNo}_${index}`) && (
+                          <div style={{ color: "#92400e", fontSize: "12px", marginBottom: "6px" }}>Edited after rejection</div>
+                        )}
+                        <button type="button" onClick={() => handleQuestionReview(`${section.sectionNo}_${index}`, false)} style={{ background: "#16a34a", color: "#fff", border: 0, padding: "6px 8px", borderRadius: "4px", marginRight: "5px" }}>
+                          Approve
+                        </button>
+                        <button type="button" onClick={() => handleQuestionReview(`${section.sectionNo}_${index}`, true)} style={{ background: "#dc2626", color: "#fff", border: 0, padding: "6px 8px", borderRadius: "4px" }}>
+                          Reject
+                        </button>
+                        {submission.review?.find((item) => item.questionNo === `${section.sectionNo}_${index}` && item.reviewerRole === "dean") && (
+                          <div style={{ marginTop: "6px", color: "#374151", fontSize: "12px" }}>
+                            {submission.review.find((item) => item.questionNo === `${section.sectionNo}_${index}` && item.reviewerRole === "dean").rejected ? "Rejected" : "Approved"}
+                          </div>
+                        )}
                       </td>
 
                     </tr>

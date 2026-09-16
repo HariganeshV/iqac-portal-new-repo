@@ -1,6 +1,8 @@
 const Submission = require("../models/Submission");
 const { getMissingRequiredQuestions } = require("../utils/questionnaireValidation");
+const { getChangedQuestionNos } = require("../utils/submissionChanges");
 const hodQuestions = require("../data/hodQuestions");
+const facultyQuestions = require("../data/facultyQuestions");
 const sendRejectionEmail = require("../utils/sendRejectionEmail");
 const User = require("../models/User");
 const {
@@ -161,9 +163,28 @@ exports.saveHodSubmission = async (
     req.files
   );
 
-    if (submission.status === "Rejected by HOD") {
-      submission.changedAfterRejection = true;
+    const requestedStatus = status || "Draft";
+    if (requestedStatus !== "Draft") {
+      const missing = getMissingRequiredQuestions(hodQuestions, parsedAnswers);
+      if (missing.length) {
+        return res.status(400).json({
+          success: false,
+          message: "This is a mandatory field",
+          missing
+        });
+      }
     }
+
+    const existingSubmission = await Submission.findOne({
+      submittedBy: req.user._id,
+      quarter,
+      year,
+      role: "hod"
+    });
+
+    const shouldMarkChangedAfterRejection =
+      existingSubmission &&
+      existingSubmission.status === "Rejected by HOD";
 
     // ==========================
     // SAVE TO DATABASE
@@ -219,8 +240,10 @@ exports.saveHodSubmission = async (
           unansweredCount:
             unansweredCount || 0,
 
-          status:
-            status || "Draft"
+          changedAfterRejection:
+            shouldMarkChangedAfterRejection || false,
+
+          status: requestedStatus
 
         },
 
@@ -514,7 +537,7 @@ exports.rejectSubmission =
       submission.status =
         "Rejected by HOD";
 
-      submission.rejectedAnswerSnapshot = submission.answers;
+      submission.rejectedAnswerSnapshot = submission.answers.map((answer) => answer.toObject ? answer.toObject() : answer);
 
       submission.hodRemarks =
         req.body.remarks ||
@@ -540,6 +563,52 @@ exports.rejectSubmission =
       });
     }
   };
+
+exports.reviewQuestion = async (req, res) => {
+  try {
+    const { questionNo, rejected, remarks = "" } = req.body;
+    if (!questionNo || typeof rejected !== "boolean") {
+      return res.status(400).json({ success: false, message: "questionNo and rejected are required" });
+    }
+
+    const submission = await Submission.findById(req.params.id);
+    if (!submission) return res.status(404).json({ success: false, message: "Submission not found" });
+
+    submission.review = submission.review.filter(
+      (item) => !(String(item.questionNo) === String(questionNo) && item.reviewerRole === "hod")
+    );
+    submission.review.push({
+      questionNo: String(questionNo),
+      rejected,
+      remarks,
+      reviewerRole: "hod",
+      reviewedBy: String(req.user._id),
+      reviewedAt: new Date()
+    });
+    const expectedQuestionNos = facultyQuestions.flatMap((section) =>
+      section.questions?.length
+        ? section.questions.map((_, index) => `${section.sectionNo}_${index}`)
+        : [String(section.sectionNo)]
+    );
+    const reviewedQuestionNos = new Set(
+      submission.review
+        .filter((item) => item.reviewerRole === "hod")
+        .map((item) => String(item.questionNo))
+    );
+    if (rejected) {
+      submission.status = "Rejected by HOD";
+      submission.rejectedAnswerSnapshot = submission.answers.map((answer) => answer.toObject ? answer.toObject() : answer);
+      submission.hodRemarks = remarks || `Question ${questionNo} rejected`;
+    } else if (expectedQuestionNos.every((questionId) => reviewedQuestionNos.has(questionId))) {
+      submission.status = "Pending Dean Review";
+      submission.hodRemarks = "";
+    }
+    await submission.save();
+    return res.status(200).json({ success: true, review: submission.review });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 // ==============================
 // UPDATE HOD SUBMISSION
 // ==============================
@@ -692,6 +761,15 @@ newAnswer.answer={};
     // ==========================
     // SAVE
     // ==========================
+
+    if (submission.status === "Rejected by HOD" && submission.rejectedAnswerSnapshot) {
+      submission.changedAfterRejection = true;
+      submission.review = submission.review.filter((item) => item.reviewerRole !== "hod");
+      submission.changedQuestionNos = getChangedQuestionNos(
+        submission.rejectedAnswerSnapshot,
+        parsedAnswers
+      );
+    }
 
     submission.answers =
       parsedAnswers;

@@ -1,10 +1,10 @@
 import React from "react";
 import Select from "react-select";
-
 function SingleRecordQuestion({
   fields,
   value,
-  onChange
+  onChange,
+  mandatory = false
 }) {
 
   const data = value || {};
@@ -20,6 +20,11 @@ function SingleRecordQuestion({
     });
 
   };
+
+  const isNotAvailable = (value) =>
+    ["N/A", "No data", "Not available", "Not Available"].includes(
+      String(value || "").trim()
+    );
 
   return (
 
@@ -42,18 +47,20 @@ function SingleRecordQuestion({
               }}
             >
 
-              <label
-                style={{
-                  display:"block",
-                  fontWeight:"600",
-                  marginBottom:"8px"
-                }}
-              >
-                {
-                  field.label ||
-                  field.key
-                }
-              </label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                <label
+                  style={{
+                    display:"block",
+                    fontWeight:"600"
+                  }}
+                >
+                  {
+                    field.label ||
+                    field.key
+                  }
+                </label>
+
+              </div>
 
               {
 
@@ -87,6 +94,16 @@ inputType === "Image Upload" ||
 inputType === "Image Upload (JPG/JPEG/PNG)" ? (
 
   <>
+
+    {
+      data[field.key] &&
+      typeof File !== "undefined" &&
+      data[field.key] instanceof File && (
+        <div style={{ color: "#166534", fontWeight: "600", marginBottom: "10px" }}>
+          Selected file: {data[field.key].name}
+        </div>
+      )
+    }
 
     {
       data[field.key] &&

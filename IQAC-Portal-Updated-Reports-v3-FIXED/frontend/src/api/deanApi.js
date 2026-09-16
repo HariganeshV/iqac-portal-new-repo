@@ -57,6 +57,9 @@ export const rejectSubmission = (id, remarks) =>
     remarks
   });
 
+export const reviewQuestion = (id, questionNo, rejected, remarks = "") =>
+  API.put(`/dean/review-question/${id}`, { questionNo, rejected, remarks });
+
 // ==============================
 // DEAN QUESTIONNAIRE
 // ==============================

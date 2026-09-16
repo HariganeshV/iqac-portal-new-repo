@@ -522,19 +522,11 @@ submission.status==="Rejected by Dean"
 
 );
 
-      const submittedIds =
-
-        new Set(
-
-          quarterSubmissions.map(
-
-            submission =>
-
-              String(submission.submittedBy?._id)
-
-          )
-
-        );
+      const submittedIds = new Set(
+        quarterSubmissions
+          .filter((submission) => submission.status !== "Draft")
+          .map((submission) => String(submission.submittedBy?._id))
+      );
 
       const notSubmitted =
 

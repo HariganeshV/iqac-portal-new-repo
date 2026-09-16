@@ -1,7 +1,10 @@
 const Submission = require("../models/Submission");
 const User = require("../models/User");
 const { getMissingRequiredQuestions } = require("../utils/questionnaireValidation");
+const { getChangedQuestionNos } = require("../utils/submissionChanges");
 const deanQuestions = require("../data/deanQuestions");
+const hodQuestions = require("../data/hodQuestions");
+const facultyQuestions = require("../data/facultyQuestions");
 const sendRejectionEmail = require("../utils/sendRejectionEmail");
 const {
     generateDeanExcel
@@ -107,6 +110,18 @@ answers.forEach((item) => {
 
 });
 
+      const requestedStatus = req.body.status || "Draft";
+      if (requestedStatus !== "Draft") {
+        const missing = getMissingRequiredQuestions(deanQuestions, answers);
+        if (missing.length) {
+          return res.status(400).json({
+            success: false,
+            message: "This is a mandatory field",
+            missing
+          });
+        }
+      }
+
       const submission =
   await Submission.create({
 
@@ -143,7 +158,7 @@ req.body.unansweredCount,
 
     tableData,
 
-    status: req.body.status || "Draft"
+    status: requestedStatus
 
   });
 
@@ -400,6 +415,15 @@ async (req, res) => {
 
 });
 
+    if (submission.status === "Rejected by Dean" && submission.rejectedAnswerSnapshot) {
+      submission.changedAfterRejection = true;
+      submission.review = submission.review.filter((item) => item.reviewerRole !== "dean");
+      submission.changedQuestionNos = getChangedQuestionNos(
+        submission.rejectedAnswerSnapshot,
+        parsedAnswers
+      );
+    }
+
     submission.answers =
       parsedAnswers;
 
@@ -501,6 +525,15 @@ exports.submitDeanSubmission =
           success: false,
           message:
             "Submission not found"
+        });
+      }
+
+      const missing = getMissingRequiredQuestions(deanQuestions, submission.answers);
+      if (missing.length) {
+        return res.status(400).json({
+          success: false,
+          message: "This is a mandatory field",
+          missing
         });
       }
 
@@ -749,7 +782,7 @@ exports.rejectSubmission =
       submission.status =
         "Rejected by Dean";
 
-      submission.rejectedAnswerSnapshot = submission.answers;
+      submission.rejectedAnswerSnapshot = submission.answers.map((answer) => answer.toObject ? answer.toObject() : answer);
 
       submission.deanRemarks =
         req.body.remarks ||
@@ -775,6 +808,54 @@ exports.rejectSubmission =
       });
     }
   };
+
+exports.reviewQuestion = async (req, res) => {
+  try {
+    const { questionNo, rejected, remarks = "" } = req.body;
+    if (!questionNo || typeof rejected !== "boolean") {
+      return res.status(400).json({ success: false, message: "questionNo and rejected are required" });
+    }
+
+    const submission = await Submission.findById(req.params.id);
+    if (!submission) return res.status(404).json({ success: false, message: "Submission not found" });
+
+    submission.review = submission.review.filter(
+      (item) => !(String(item.questionNo) === String(questionNo) && item.reviewerRole === "dean")
+    );
+    submission.review.push({
+      questionNo: String(questionNo),
+      rejected,
+      remarks,
+      reviewerRole: "dean",
+      reviewedBy: String(req.user._id),
+      reviewedAt: new Date()
+    });
+    const expectedQuestionNos = submission.role === "faculty"
+      ? facultyQuestions.flatMap((section) =>
+          section.questions?.length
+            ? section.questions.map((_, index) => `${section.sectionNo}_${index}`)
+            : [String(section.sectionNo)]
+        )
+      : hodQuestions.map((section) => String(section.sectionNo));
+    const reviewedQuestionNos = new Set(
+      submission.review
+        .filter((item) => item.reviewerRole === "dean")
+        .map((item) => String(item.questionNo))
+    );
+    if (rejected) {
+      submission.status = "Rejected by Dean";
+      submission.rejectedAnswerSnapshot = submission.answers.map((answer) => answer.toObject ? answer.toObject() : answer);
+      submission.deanRemarks = remarks || `Question ${questionNo} rejected`;
+    } else if (expectedQuestionNos.every((questionId) => reviewedQuestionNos.has(questionId))) {
+      submission.status = "Approved by Dean";
+      submission.deanRemarks = "";
+    }
+    await submission.save();
+    return res.status(200).json({ success: true, review: submission.review });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 // ==============================
 // GET FACULTY SUBMISSION BY ID
 // ==============================

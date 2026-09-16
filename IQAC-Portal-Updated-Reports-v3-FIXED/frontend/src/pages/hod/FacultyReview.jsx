@@ -10,7 +10,8 @@ import {
   getFacultySubmissions,
   approveSubmission,
   rejectSubmission,
-  downloadFacultyPDF
+  downloadFacultyPDF,
+  reviewQuestion
 } from "../../api/hodApi";
 
 function FacultyReview() {
@@ -243,6 +244,31 @@ if (activeTab === "rejected") {
 
     };
 
+    const handleQuestionReview = async (questionNo, rejected) => {
+      if (!selectedSubmission) return;
+      const questionRemarks = rejected
+        ? window.prompt("Enter rejection reason for this question")
+        : "";
+      if (rejected && questionRemarks === null) return;
+      try {
+        await reviewQuestion(
+          selectedSubmission._id,
+          questionNo,
+          rejected,
+          questionRemarks || ""
+        );
+        const response = await getFacultySubmissions();
+        setSubmissions(response.data.submissions || []);
+        setSelectedSubmission((current) => current ? {
+          ...current,
+          review: (response.data.submissions || []).find((item) => item._id === current._id)?.review || current.review
+        } : current);
+      } catch (error) {
+        console.error(error);
+        alert("Question review failed");
+      }
+    };
+
   return (
 
 <HodLayout>
@@ -417,10 +443,6 @@ if (activeTab === "rejected") {
               </th>
 
               <th style={thStyle}>
-                Remarks
-              </th>
-
-              <th style={thStyle}>
                 Actions
               </th>
 
@@ -487,30 +509,6 @@ if (activeTab === "rejected") {
 
                     <td style={tdStyle}>
 
-                      <textarea
-                        rows="2"
-                        placeholder="Reason if rejecting..."
-                        value={
-  remarks[item._id] ??
-  item.hodRemarks ??
-  ""
-}
-                        onChange={(e) =>
-                          setRemarks({
-                            ...remarks,
-                            [item._id]:
-                              e.target.value
-                          })
-                        }
-                        style={{
-                          width: "100%"
-                        }}
-                      />
-
-                    </td>
-
-                    <td style={tdStyle}>
-
                       <button
                         onClick={() =>
                           setSelectedSubmission(
@@ -542,28 +540,6 @@ if (activeTab === "rejected") {
 >
   PDF
 </button>
-
-                    {
-item.status === "Pending HOD Approval" && (
-  <button
-    onClick={() => handleApprove(item._id)}
-    style={approveBtn}
-  >
-    Approve
-  </button>
-)
-}
-
-{
-item.status === "Pending HOD Approval" && (
-  <button
-    onClick={() => handleReject(item._id)}
-    style={rejectBtn}
-  >
-    Reject
-  </button>
-)
-}
 
                     </td>
 
@@ -750,12 +726,19 @@ selectedSubmission.answers?.find(
 a.questionNo === key
 );
 
+const questionReview = selectedSubmission.review?.find(
+  (item) => item.questionNo === key && item.reviewerRole === "hod"
+);
+
 return (
 
-<tr key={key}>
+<tr key={key} style={{ background: selectedSubmission.changedQuestionNos?.includes(key) ? "#fef3c7" : "transparent" }}>
 
 <td style={tdStyle}>
 {question.question}
+{selectedSubmission.changedQuestionNos?.includes(key) && (
+  <div style={{ color: "#92400e", fontSize: "12px", marginTop: "4px" }}>Edited after rejection</div>
+)}
 </td>
 
 <td style={tdStyle}>
@@ -843,6 +826,20 @@ String(answerObj.answer)
 "NIL"
 
 }
+
+<div style={{ marginTop: "10px", display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
+  <button type="button" onClick={() => handleQuestionReview(key, false)} style={approveBtn}>
+    Approve Question
+  </button>
+  <button type="button" onClick={() => handleQuestionReview(key, true)} style={rejectBtn}>
+    Reject Question
+  </button>
+  {questionReview && (
+    <span style={{ color: questionReview.rejected ? "#b91c1c" : "#166534", fontWeight: "600" }}>
+      {questionReview.rejected ? `Rejected: ${questionReview.remarks || "No reason"}` : "Approved"}
+    </span>
+  )}
+</div>
 
 </td>
 

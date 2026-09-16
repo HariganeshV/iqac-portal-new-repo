@@ -72,8 +72,15 @@ export const getPermanentFacultyAnswers = (user) => {
   const result = {};
 
   if (hasAnswer(user?.name)) result["3_0"] = user.name;
+  if (hasAnswer(user?.facultyPhoto)) result["3_1"] = user.facultyPhoto;
   if (hasAnswer(user?.designation)) result["3_2"] = user.designation;
-  if (hasAnswer(user?.dateOfJoining)) result["3_4"] = user.dateOfJoining;
+  if (hasAnswer(user?.employmentType)) result["3_3"] = user.employmentType;
+  if (hasAnswer(user?.dateOfAppointment || user?.dateOfJoining)) {
+    result["3_4"] = user.dateOfAppointment || user.dateOfJoining;
+  }
+  if (hasAnswer(user?.dateOfRelieving)) result["3_5"] = user.dateOfRelieving;
+  if (hasAnswer(user?.scopusAuthorId)) result["3_6"] = user.scopusAuthorId;
+  if (hasAnswer(user?.vidwanId)) result["3_7"] = user.vidwanId;
 
   return result;
 };

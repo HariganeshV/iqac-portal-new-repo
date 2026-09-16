@@ -7,7 +7,8 @@ import Select from "react-select";
 function DynamicTableQuestion({
   columns,
   value,
-  onChange
+  onChange,
+  mandatory = false
 }) {
 
   const [rows, setRows] =
@@ -58,6 +59,11 @@ function DynamicTableQuestion({
   onChange(updatedRows);
 
 };
+
+  const isNotAvailable = (value) =>
+    ["N/A", "No data", "Not available", "Not Available"].includes(
+      String(value || "").trim()
+    );
 
   return (
 
@@ -135,22 +141,26 @@ return (
 
                             ?
 
-                            <textarea
-                              rows="3"
-                              value={
-                                row[col.key] || ""
-                              }
-                              onChange={(e)=>
-                                handleChange(
-                                  rowIndex,
-                                  col.key,
-                                  e.target.value
-                                )
-                              }
-                              style={{
-                                width:"100%"
-                              }}
-                            />
+                            <>
+                              <textarea
+                                rows="3"
+                                value={
+                                  row[col.key] || ""
+                                }
+                                disabled={isNotAvailable(row[col.key])}
+                                onChange={(e)=>
+                                  handleChange(
+                                    rowIndex,
+                                    col.key,
+                                    e.target.value
+                                  )
+                                }
+                                style={{
+                                  width:"100%",
+                                  background: isNotAvailable(row[col.key]) ? "#f3f4f6" : "#fff"
+                                }}
+                              />
+                            </>
 
                             :
 
@@ -161,40 +171,45 @@ return (
 
                             ?
 
-                            <select
-                              value={
-                                row[col.key] || ""
-                              }
-                              onChange={(e)=>
-                                handleChange(
-                                  rowIndex,
-                                  col.key,
-                                  e.target.value
-                                )
-                              }
-                              style={{
-                                width:"100%"
-                              }}
-                            >
-
-                              <option value="">
-                                Select
-                              </option>
-
-                              {
-                                (col.options || []).map(
-                                  (option)=>(
-                                    <option
-                                      key={option}
-                                      value={option}
-                                    >
-                                      {option}
-                                    </option>
+                            <>
+                              <select
+                                value={
+                                  row[col.key] || ""
+                                }
+                                disabled={isNotAvailable(row[col.key])}
+                                onChange={(e)=>
+                                  handleChange(
+                                    rowIndex,
+                                    col.key,
+                                    e.target.value
                                   )
-                                )
-                              }
+                                }
+                                style={{
+                                  width:"100%",
+                                  background: isNotAvailable(row[col.key]) ? "#f3f4f6" : "#fff"
+                                }}
+                              >
 
-                            </select>
+                                <option value="">
+                                  Select
+                                </option>
+                                {!mandatory && <option value="Not available">Not available</option>}
+
+                                {
+                                  (col.options || []).map(
+                                    (option)=>(
+                                      <option
+                                        key={option}
+                                        value={option}
+                                      >
+                                        {option}
+                                      </option>
+                                    )
+                                  )
+                                }
+
+                              </select>
+                            </>
 
                             :
 

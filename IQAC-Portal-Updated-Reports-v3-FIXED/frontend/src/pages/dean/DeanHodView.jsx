@@ -4,7 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import DeanLayout from "../../layouts/DeanLayout";
 
 import {
-  getHodSubmissionById
+  getHodSubmissionById,
+  reviewQuestion
 } from "../../api/deanApi";
 
 import hodQuestions from "../../data/hodQuestions";
@@ -88,6 +89,19 @@ function DeanHodView() {
 
   };
 
+  const handleQuestionReview = async (questionNo, rejected) => {
+    const remarks = rejected
+      ? window.prompt("Enter rejection reason for this question")
+      : "";
+    if (rejected && remarks === null) return;
+    try {
+      await reviewQuestion(id, questionNo, rejected, remarks || "");
+      await loadSubmission();
+    } catch (error) {
+      console.error(error);
+      alert("Question review failed");
+    }
+  };
   if (loading) {
 
     return (
@@ -788,6 +802,30 @@ const value =
 
   ))
 }
+
+        <div style={{ marginTop: "30px", background: "#fff", borderRadius: "12px", padding: "20px", boxShadow: "0 2px 8px rgba(0,0,0,.08)" }}>
+          <h2 style={{ color: "#2563eb" }}>Question Review</h2>
+          {hodQuestions.map((section) => {
+            const questionNo = String(section.sectionNo);
+            const review = submission.review?.find(
+              (item) => item.questionNo === questionNo && item.reviewerRole === "dean"
+            );
+            const changed = submission.changedQuestionNos?.includes(questionNo);
+            return (
+              <div key={questionNo} style={{ borderBottom: "1px solid #e5e7eb", padding: "12px 0", background: changed ? "#fef3c7" : "transparent" }}>
+                <div style={{ marginBottom: "8px", fontWeight: "600" }}>Question {questionNo}: {section.sectionTitle}</div>
+                {changed && <div style={{ color: "#92400e", fontSize: "13px", marginBottom: "8px" }}>Edited after rejection</div>}
+                <button type="button" onClick={() => handleQuestionReview(questionNo, false)} style={{ marginRight: "6px", background: "#16a34a", color: "#fff", border: "none", padding: "7px 10px", borderRadius: "5px" }}>
+                  Approve
+                </button>
+                <button type="button" onClick={() => handleQuestionReview(questionNo, true)} style={{ background: "#dc2626", color: "#fff", border: "none", padding: "7px 10px", borderRadius: "5px" }}>
+                  Reject
+                </button>
+                {review && <span style={{ marginLeft: "10px", color: review.rejected ? "#b91c1c" : "#166534" }}>{review.rejected ? `Rejected: ${review.remarks || "No reason"}` : "Approved"}</span>}
+              </div>
+            );
+          })}
+        </div>
 
       </div>
 

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Select from "react-select";
+import { isMandatorySection } from "../../utils/questionnaireRules";
 
-function QuestionRenderer({
+function QuestionInput({
   questionData,
   value,
-  onChange
+  onChange,
+  mandatory = false
 }) {
   
   const [replaceMode, setReplaceMode] =
@@ -17,28 +19,35 @@ function QuestionRenderer({
     sectionTitle
   } = questionData;
 
-  const allowsNoData = ![
-    "Publications",
-    "Awards",
-    "Grants",
-    "Journals",
-    "Extension / Outreach"
-  ].includes(sectionTitle);
+  const allowsNoData = !mandatory;
 
-  const emptyMessage = !value
-    ? "This is a mandatory field"
-    : null;
+  const isNotAvailable = (fieldValue) =>
+    ["N/A", "No data", "Not available", "Not Available"].includes(
+      String(fieldValue || "").trim()
+    );
+
+  const emptyMessage = !value || isNotAvailable(value)
+    ? null
+    : "This is a mandatory field";
 
   const renderSelectOptions = () => (
     <>
       <option value="">Select Option</option>
-      <option value="N/A">N/A</option>
+      {!mandatory && <option value="Not available">Not available</option>}
       {allowsNoData && <option value="No data">No data / record</option>}
       {options?.map((option) => (
         <option key={option} value={option}>{option}</option>
       ))}
     </>
   );
+
+  const toggleNotAvailable = () => {
+    if (isNotAvailable(value)) {
+      onChange("");
+      return;
+    }
+    onChange("Not available");
+  };
 
   const mandatoryNotice = emptyMessage && (
     <div style={{ color: "#b91c1c", fontSize: "13px", marginTop: "6px" }}>
@@ -51,15 +60,18 @@ function QuestionRenderer({
     case "Text":
       return (
         <>
-        <input
-          type="text"
-          value={value || ""}
-          onChange={(e) =>
-            onChange(e.target.value)
-          }
-          placeholder={question}
-          style={inputStyle}
-        />
+        <div>
+          <input
+            type="text"
+            value={value || ""}
+            onChange={(e) =>
+              onChange(e.target.value)
+            }
+            placeholder={question}
+            style={{ ...inputStyle, ...(isNotAvailable(value) ? { background: "#f3f4f6", color: "#6b7280" } : {}) }}
+            disabled={isNotAvailable(value)}
+          />
+        </div>
         {mandatoryNotice}
         </>
       );
@@ -67,15 +79,18 @@ function QuestionRenderer({
     case "Numeric":
       return (
         <>
-        <input
-          type="number"
-          value={value || ""}
-          onChange={(e) =>
-            onChange(e.target.value)
-          }
-          placeholder={question}
-          style={inputStyle}
-        />
+        <div>
+          <input
+            type="number"
+            value={value || ""}
+            onChange={(e) =>
+              onChange(e.target.value)
+            }
+            placeholder={question}
+            style={{ ...inputStyle, ...(isNotAvailable(value) ? { background: "#f3f4f6", color: "#6b7280" } : {}) }}
+            disabled={isNotAvailable(value)}
+          />
+        </div>
         {mandatoryNotice}
         </>
       );
@@ -83,16 +98,19 @@ function QuestionRenderer({
     case "Decimal Number":
       return (
         <>
-        <input
-          type="number"
-          step="0.01"
-          value={value || ""}
-          onChange={(e) =>
-            onChange(e.target.value)
-          }
-          placeholder={question}
-          style={inputStyle}
-        />
+        <div>
+          <input
+            type="number"
+            step="0.01"
+            value={value || ""}
+            onChange={(e) =>
+              onChange(e.target.value)
+            }
+            placeholder={question}
+            style={{ ...inputStyle, ...(isNotAvailable(value) ? { background: "#f3f4f6", color: "#6b7280" } : {}) }}
+            disabled={isNotAvailable(value)}
+          />
+        </div>
         {mandatoryNotice}
         </>
       );
@@ -108,6 +126,35 @@ function QuestionRenderer({
           style={inputStyle}
         />
       );
+
+    case "DD/MM/YYYY + Duration": {
+      const dateValue = value && typeof value === "object" ? value.date || "" : "";
+      const durationValue = value && typeof value === "object" ? value.duration || "" : "";
+
+      return (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px" }}>
+          <label style={{ display: "grid", gap: "4px", color: "#374151", fontWeight: "600" }}>
+            Start date
+            <input
+              type="date"
+              value={dateValue}
+              onChange={(event) => onChange({ date: event.target.value, duration: durationValue })}
+              style={inputStyle}
+            />
+          </label>
+          <label style={{ display: "grid", gap: "4px", color: "#374151", fontWeight: "600" }}>
+            Duration
+            <input
+              type="text"
+              value={durationValue}
+              placeholder="e.g. 3 years"
+              onChange={(event) => onChange({ date: dateValue, duration: event.target.value })}
+              style={inputStyle}
+            />
+          </label>
+        </div>
+      );
+    }
 
     case "URL":
       return (
@@ -147,8 +194,6 @@ function QuestionRenderer({
           <option value="">
             Select
           </option>
-
-          <option value="N/A">N/A</option>
 
           <option value="Yes">
             Yes
@@ -235,6 +280,11 @@ case "PDF Upload":
 case "PDF/Word Upload":
   return (
     <>
+      {typeof File !== "undefined" && value instanceof File && (
+        <div style={{ color: "#166534", fontWeight: "600", marginBottom: "10px" }}>
+          Selected file: {value.name}
+        </div>
+      )}
       {
         value &&
 typeof value === "string" &&
@@ -326,6 +376,11 @@ case "Image Upload":
 case "Image Upload (JPG/JPEG/PNG)":
   return (
     <>
+      {typeof File !== "undefined" && value instanceof File && (
+        <div style={{ color: "#166534", fontWeight: "600", marginBottom: "10px" }}>
+          Selected image: {value.name}
+        </div>
+      )}
       {
         value &&
 typeof value === "string" &&
@@ -427,5 +482,15 @@ const inputStyle = {
   borderRadius: "8px",
   fontSize: "14px"
 };
+
+function QuestionRenderer({ questionData, value, onChange }) {
+  const mandatory = isMandatorySection(questionData.sectionTitle);
+
+  return (
+    <div>
+      <QuestionInput questionData={questionData} value={value} onChange={onChange} mandatory={mandatory} />
+    </div>
+  );
+}
 
 export default QuestionRenderer;

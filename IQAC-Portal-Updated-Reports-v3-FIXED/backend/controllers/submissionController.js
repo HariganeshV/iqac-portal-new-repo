@@ -19,11 +19,14 @@ const facultyQuestions =
     "../data/facultyQuestions"
   );
 
+const activeFacultyQuestions = facultyQuestions;
+
 const hodQuestions =
 require("../data/hodQuestions");
 
 const { getMissingRequiredQuestions } =
 require("../utils/questionnaireValidation");
+const { getChangedQuestionNos } = require("../utils/submissionChanges");
 
 // ==============================
 // SAVE DRAFT SUBMISSION
@@ -91,6 +94,23 @@ if (
   );
 
 }
+
+    const questionSet = role === "faculty"
+      ? activeFacultyQuestions
+      : role === "hod"
+        ? hodQuestions
+        : deanQuestions;
+    const requestedStatus = status || "Draft";
+    if (requestedStatus !== "Draft") {
+      const missing = getMissingRequiredQuestions(questionSet, parsedAnswers);
+      if (missing.length) {
+        return res.status(400).json({
+          success: false,
+          message: "This is a mandatory field",
+          missing
+        });
+      }
+    }
     const submission =
       await Submission.findOneAndUpdate(
 
@@ -134,8 +154,7 @@ submittedByEmail:
   tableData:
     tableData || {},
 
-  status:
-    status || "Draft"
+  status: requestedStatus
 },
 
         {
@@ -260,7 +279,7 @@ exports.submitQuestionnaire =
 
       const questionSet =
         submission.role === "faculty"
-          ? facultyQuestions
+          ? activeFacultyQuestions
           : submission.role === "hod"
             ? hodQuestions
             : deanQuestions;
@@ -361,6 +380,15 @@ if (
     }
   );
 
+}
+
+if (submission.status === "Rejected by HOD" && submission.rejectedAnswerSnapshot) {
+  submission.changedAfterRejection = true;
+  submission.review = submission.review.filter((item) => item.reviewerRole !== "hod");
+  submission.changedQuestionNos = getChangedQuestionNos(
+    submission.rejectedAnswerSnapshot,
+    parsedAnswers
+  );
 }
 
 submission.answers =

@@ -21,7 +21,8 @@ const {
   getDeanAnalytics,
 
   getDeanDepartments,
-  downloadDeanExcel
+  downloadDeanExcel,
+  reviewQuestion
 
 } = require("../controllers/deanController");
 
@@ -111,6 +112,8 @@ router.put(
   protect,
   rejectSubmission
 );
+
+router.put("/review-question/:id", protect, reviewQuestion);
 
 router.get(
   "/faculty-submission/:id",

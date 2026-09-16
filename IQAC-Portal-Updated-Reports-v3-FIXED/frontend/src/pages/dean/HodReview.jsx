@@ -565,10 +565,6 @@ const handleReject = async () => {
         </th>
 
         <th style={thStyle}>
-          Remarks
-        </th>
-
-        <th style={thStyle}>
           Actions
         </th>
 
@@ -652,15 +648,6 @@ submission.status ===
 
               <td style={tdStyle}>
 
-                {
-                  submission.deanRemarks ||
-                  "-"
-                }
-
-              </td>
-
-              <td style={tdStyle}>
-
   <button
     onClick={() => {
 
@@ -710,54 +697,6 @@ submission.status ===
   >
     📄 PDF
   </button>
-
-  {
-
-submission.status === "Pending Dean Review" && (
-  <button
-    onClick={() =>
-      handleApprove(submission._id)
-    }
-    style={{
-      padding:"8px 14px",
-      background:"#0ea5e9",
-      color:"#fff",
-      border:"none",
-      borderRadius:"6px",
-      cursor:"pointer",
-      marginRight:"8px",
-      marginBottom:"6px"
-    }}
-  >
-    ✅ Approve
-  </button>
-)
-
-}
-
-  {
-
-submission.status === "Pending Dean Review" && (
-  <button
-    onClick={() => {
-      setSelectedSubmission(submission._id);
-      setRemarks("");
-    }}
-    style={{
-      padding:"8px 14px",
-      background:"#dc2626",
-      color:"#fff",
-      border:"none",
-      borderRadius:"6px",
-      cursor:"pointer",
-      marginBottom:"6px"
-    }}
-  >
-    ❌ Reject
-  </button>
-)
-
-}
 
               </td>
 

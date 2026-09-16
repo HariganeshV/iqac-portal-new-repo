@@ -1,16 +1,40 @@
-const REQUIRED_SECTIONS_WITHOUT_NO_DATA = [
-  "Publications",
-  "Awards",
-  "Grants",
-  "Journals",
-  "Extension / Outreach"
+const MANDATORY_SECTION_KEYWORDS = [
+  "publication",
+  "award",
+  "grant",
+  "journal",
+  "extension",
+  "outreach"
 ];
 
-const isAnswered = (value) => {
+const NO_DATA_VALUES = new Set([
+  "N/A",
+  "No data",
+  "Not available",
+  "Not Available",
+  "Not applicable"
+]);
+
+const isMandatorySection = (sectionTitle = "") => {
+  const title = String(sectionTitle).toLowerCase();
+  return MANDATORY_SECTION_KEYWORDS.some((keyword) => title.includes(keyword));
+};
+
+const isAnswered = (value, mandatory = false) => {
   if (value === null || value === undefined || value === "") return false;
-  if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === "object") return Object.values(value).some(isAnswered);
-  return String(value).trim().length > 0;
+  if (Array.isArray(value)) {
+    return value.length > 0 && value.every((item) => isAnswered(item, mandatory));
+  }
+  if (typeof value === "object") {
+    const values = Object.values(value);
+    return values.length > 0 && values.every((item) => isAnswered(item, mandatory));
+  }
+
+  const normalized = String(value).trim();
+  if (normalized.length === 0) return false;
+  if (NO_DATA_VALUES.has(normalized)) return !mandatory;
+
+  return true;
 };
 
 const getMissingRequiredQuestions = (questionSet, answers = []) => {
@@ -20,16 +44,20 @@ const getMissingRequiredQuestions = (questionSet, answers = []) => {
   const missing = [];
 
   questionSet.forEach((section) => {
-    const allowsNoData = !REQUIRED_SECTIONS_WITHOUT_NO_DATA.includes(
-      section.sectionTitle
-    );
+    const mandatory = isMandatorySection(section.sectionTitle);
+    if (!section.questions?.length) {
+      const value = answerMap.get(String(section.sectionNo));
+      if (!isAnswered(value, mandatory)) {
+        missing.push({ questionNo: String(section.sectionNo), question: section.sectionTitle });
+      }
+      return;
+    }
 
     (section.questions || []).forEach((question, index) => {
       const questionNo = `${section.sectionNo}_${index}`;
       const value = answerMap.get(questionNo);
-      const noData = value === "N/A" || value === "No data";
-
-      if (!isAnswered(value) && !(allowsNoData && noData)) {
+      const normalized = typeof value === "string" ? value.trim() : value;
+      if (!isAnswered(value, mandatory)) {
         missing.push({ questionNo, question: question.question });
       }
     });
@@ -38,4 +66,4 @@ const getMissingRequiredQuestions = (questionSet, answers = []) => {
   return missing;
 };
 
-module.exports = { getMissingRequiredQuestions, isAnswered };
+module.exports = { getMissingRequiredQuestions, isAnswered, NO_DATA_VALUES };

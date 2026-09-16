@@ -15,9 +15,6 @@ import {
 
 import { useAuth } from "../../context/AuthContext";
 
-import {
-  getPreviousQuarterAnswers
-} from "../../utils/answerAutofill";
 
 import { useNavigate } from "react-router-dom";
 
@@ -28,12 +25,15 @@ import hodQuestions from "../../data/hodQuestions";
 import DynamicTableQuestion from "../../components/questionnaire/DynamicTableQuestion";
 
 import SingleRecordQuestion from "../../components/questionnaire/SingleRecordQuestion";
+import QuestionAvailabilityToggle from "../../components/questionnaire/QuestionAvailabilityToggle";
+import { isMandatorySection } from "../../utils/questionnaireRules";
 
 import ProgressBar from "../../components/questionnaire/ProgressBar";
 
 import QuestionPalette from "../../components/questionnaire/QuestionPalette";
 
 import NavigationButtons from "../../components/questionnaire/NavigationButtons";
+import { getMissingQuestions } from "../../utils/questionnaireRules";
 
 function HODQuestionnaire() {
 
@@ -74,12 +74,7 @@ setIsEditMode] =
 
       } else {
 
-        setAnswers(
-          getPreviousQuarterAnswers(
-            submissions,
-            value
-          )
-        );
+        setAnswers({});
 
         setSelectedQuarter(
           value
@@ -448,6 +443,16 @@ const handleSubmit =
 
     try {
 
+      const missing = getMissingQuestions(hodQuestions, answers);
+      if (!selectedQuarter) {
+        alert("Please Select Quarter");
+        return;
+      }
+      if (missing.length) {
+        alert(`Please complete all questions. Missing: ${missing.length}`);
+        return;
+      }
+
       const formData =
         new FormData();
 
@@ -807,6 +812,11 @@ selectedQuarter && (
 
 <hr />
 
+           <QuestionAvailabilityToggle
+  sectionTitle={currentQuestion.sectionTitle}
+  value={answers[currentQuestion.sectionNo]}
+  onChange={(value) => handleAnswerChange(currentQuestion.sectionNo, value)}
+>
            {
   currentQuestion.type === "table" && (
 
@@ -819,6 +829,7 @@ selectedQuarter && (
           currentQuestion.sectionNo
         ]
       }
+      mandatory={isMandatorySection(currentQuestion.sectionTitle)}
       onChange={(value)=>
         handleAnswerChange(
           currentQuestion.sectionNo,
@@ -843,6 +854,7 @@ selectedQuarter && (
           currentQuestion.sectionNo
         ]
       }
+      mandatory={isMandatorySection(currentQuestion.sectionTitle)}
       onChange={(value)=>
         handleAnswerChange(
           currentQuestion.sectionNo,
@@ -853,6 +865,8 @@ selectedQuarter && (
 
   )
 }
+
+          </QuestionAvailabilityToggle>
 
             <NavigationButtons
   onPrevious={

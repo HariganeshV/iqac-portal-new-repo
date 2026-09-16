@@ -27,6 +27,9 @@ export const rejectSubmission =
       }
     );
 
+export const reviewQuestion = (id, questionNo, rejected, remarks = "") =>
+  API.put(`/hod/review-question/${id}`, { questionNo, rejected, remarks });
+
     export const downloadFacultyPDF =
   (id) =>
     API.get(

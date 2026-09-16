@@ -19,7 +19,8 @@ const {
   getFacultyReviewStats,
 
   getHodDepartmentInfo,
-downloadHodExcel
+downloadHodExcel,
+  reviewQuestion
 
 } = require("../controllers/hodController");
 
@@ -93,6 +94,8 @@ router.put(
   protect,
   rejectSubmission
 );
+
+router.put("/review-question/:id", protect, reviewQuestion);
 
 router.get(
   "/analytics",

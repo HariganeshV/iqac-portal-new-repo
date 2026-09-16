@@ -102,6 +102,7 @@ submittedByEmail: {
         questionNo: String,
         rejected: Boolean,
         remarks: String,
+        reviewerRole: String,
         reviewedBy: String,
         reviewedAt: Date
       }],
@@ -111,6 +112,11 @@ submittedByEmail: {
     changedAfterRejection: {
       type: Boolean,
       default: false
+    },
+
+    changedQuestionNos: {
+      type: [String],
+      default: []
     },
 
     rejectedAnswerSnapshot: {

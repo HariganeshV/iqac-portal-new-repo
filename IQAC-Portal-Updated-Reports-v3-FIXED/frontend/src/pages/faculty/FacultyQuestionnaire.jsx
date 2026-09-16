@@ -12,14 +12,14 @@ import FacultyLayout from "../../layouts/FacultyLayout";
 
 import facultyQuestionDefinitions from "../../data/facultyQuestions";
 
-const facultyQuestions = facultyQuestionDefinitions.filter(
-  (section) => String(section.sectionNo) !== "3"
-);
+const facultyQuestions = facultyQuestionDefinitions;
 
 import QuestionRenderer from "../../components/questionnaire/QuestionRenderer";
 import QuestionPalette from "../../components/questionnaire/QuestionPalette";
 import ProgressBar from "../../components/questionnaire/ProgressBar";
 import NavigationButtons from "../../components/questionnaire/NavigationButtons";
+import QuestionAvailabilityToggle from "../../components/questionnaire/QuestionAvailabilityToggle";
+import { getMissingQuestions, isMandatorySection, isNotApplicable, NOT_APPLICABLE } from "../../utils/questionnaireRules";
 
 import {
   saveSubmission,
@@ -31,11 +31,8 @@ import {
 import {
   useAuth
 } from "../../context/AuthContext";
+import { getPermanentFacultyAnswers } from "../../utils/answerAutofill";
 
-import {
-  getPreviousQuarterAnswers,
-  getPermanentFacultyAnswers
-} from "../../utils/answerAutofill";
 
 function FacultyQuestionnaire() {
 
@@ -110,12 +107,9 @@ const loadSubmission =
         }
       );
 
-      const permanentAnswers =
-        getPermanentFacultyAnswers(user);
-
       setAnswers({
         ...loadedAnswers,
-        ...permanentAnswers
+        ...getPermanentFacultyAnswers(user)
       });
 
     } catch (error) {
@@ -145,6 +139,15 @@ const loadSubmission =
     }
 
   };
+
+  useEffect(() => {
+    if (!id && user) {
+      setAnswers((previous) => ({
+        ...getPermanentFacultyAnswers(user),
+        ...previous
+      }));
+    }
+  }, [id, user]);
 
   const currentSection =
     facultyQuestions[currentIndex];
@@ -442,6 +445,16 @@ formData.append(
 
     try {
 
+      const missing = getMissingQuestions(facultyQuestions, answers);
+      if (!selectedQuarter) {
+        alert("Please Select Quarter");
+        return;
+      }
+      if (missing.length) {
+        alert(`Please complete all questions. Missing: ${missing.length}`);
+        return;
+      }
+
       if (
         Object.keys(
           answers
@@ -737,19 +750,7 @@ value !== ""
 
     }
 
-    const previousAnswers =
-      getPreviousQuarterAnswers(
-        submissions,
-        quarter
-      );
-
-    const permanentAnswers =
-      getPermanentFacultyAnswers(user);
-
-    setAnswers({
-      ...previousAnswers,
-      ...permanentAnswers
-    });
+    setAnswers({});
 
     setSelectedQuarter(
       quarter
@@ -916,21 +917,23 @@ value !== ""
 
   <hr />
 
-              <h2>
-
-                Question {
-
-                  currentSection.sectionNo
-
-                } : {
-
-                  currentSection.sectionTitle
-
-                }
-
-              </h2>
-
-              <hr />
+              <QuestionAvailabilityToggle
+                sectionTitle={currentSection.sectionTitle}
+                questionLabel={`Question ${currentSection.sectionNo}: ${currentSection.sectionTitle}`}
+                value={currentSection.questions.every((_, index) =>
+                  isNotApplicable(answers[`${currentSection.sectionNo}_${index}`])
+                ) ? NOT_APPLICABLE : ""}
+                onChange={(value) => {
+                  const markedNotApplicable = value === NOT_APPLICABLE;
+                  setAnswers((previous) => {
+                    const nextAnswers = { ...previous };
+                    currentSection.questions.forEach((_, index) => {
+                      nextAnswers[`${currentSection.sectionNo}_${index}`] = markedNotApplicable ? NOT_APPLICABLE : "";
+                    });
+                    return nextAnswers;
+                  });
+                }}
+              >
 
               {
 
@@ -962,11 +965,19 @@ value !== ""
                         {
                           question.question
                         }
+                        {isMandatorySection(currentSection.sectionTitle) && (
+                          <span style={{ color: "#dc2626", marginLeft: "6px" }} aria-label="Mandatory question">
+                            *
+                          </span>
+                        )}
                       </label>
 
                       <QuestionRenderer
                         questionData={
-                          question
+                          {
+                            ...question,
+                            sectionTitle: currentSection.sectionTitle
+                          }
                         }
                         value={
                           answers[
@@ -992,6 +1003,8 @@ value !== ""
                 )
 
               }
+
+              </QuestionAvailabilityToggle>
 
               <NavigationButtons
 
@@ -1051,7 +1064,7 @@ value !== ""
 
     </div>
 
-  )
+                )
 }
 
             </div>

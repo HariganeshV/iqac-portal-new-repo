@@ -6,71 +6,34 @@ import { useNavigate } from "react-router-dom";
 import DeanLayout from "../../layouts/DeanLayout";
 
 import {
-
   getFacultySubmissions,
-
   downloadFacultyPDF,
-
-  approveSubmission,
-
-  rejectSubmission
-
+  approveSubmission
 } from "../../api/deanApi";
 
 function DeanFacultyReview() {
-   const navigate = useNavigate();
-
-    const { user } = useAuth();
-    const [selectedDepartment, setSelectedDepartment] =
-  useState(() => localStorage.getItem("deanDepartment") || "");
-
-const [selectedQuarter, setSelectedQuarter] =
-  useState(() => localStorage.getItem("deanQuarter") || "");
-  
-  const [submissions, setSubmissions] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-    const [selectedTab, setSelectedTab] =
-  useState("pending");
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [selectedDepartment, setSelectedDepartment] = useState(() => localStorage.getItem("deanDepartment") || "");
+  const [selectedQuarter, setSelectedQuarter] = useState(() => localStorage.getItem("deanQuarter") || "");
+  const [submissions, setSubmissions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedTab, setSelectedTab] = useState("pending");
 
   useEffect(() => {
-
     loadFacultySubmissions();
-
   }, []);
 
-  const loadFacultySubmissions =
-    async () => {
-
-      try {
-
-        const res =
-          await getFacultySubmissions();
-
-        setSubmissions(
-
-          res.data.submissions || []
-
-        );
-
-      }
-
-      catch (err) {
-
-        console.error(err);
-
-      }
-
-      finally {
-
-        setLoading(false);
-
-      }
-
-    };
+  const loadFacultySubmissions = async () => {
+    try {
+      const res = await getFacultySubmissions();
+      setSubmissions(res.data.submissions || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ==========================
   // PDF DOWNLOAD
@@ -114,55 +77,6 @@ const [selectedQuarter, setSelectedQuarter] =
       }
 
     };
-
-const handleApprove = async (id) => {
-
-  try {
-
-    await approveSubmission(id);
-
-    loadFacultySubmissions();
-
-  }
-
-  catch (err) {
-
-    console.log(err);
-
-    alert("Approval Failed");
-
-  }
-
-};
-
-const handleReject = async (id) => {
-
-  const remarks = prompt(
-    "Enter Rejection Reason"
-  );
-
-  if (remarks === null) return;
-
-  try {
-
-    await rejectSubmission(
-      id,
-      remarks
-    );
-
-    loadFacultySubmissions();
-
-  }
-
-  catch (err) {
-
-    console.log(err);
-
-    alert("Reject Failed");
-
-  }
-
-};
 
     // ==========================
 // DEPARTMENTS OF DEAN SCHOOL
@@ -647,54 +561,6 @@ selectedTab==="pending"
 >
   👁 View
 </button>
-
-{
-selectedTab==="pending" && (
-
-<>
-
-<button
-onClick={()=>
-handleApprove(
-submission._id
-)
-}
-style={{
-padding:"8px 14px",
-marginRight:"10px",
-background:"#16a34a",
-color:"#fff",
-border:"none",
-borderRadius:"6px",
-cursor:"pointer"
-}}
->
-Approve
-</button>
-
-<button
-onClick={()=>
-handleReject(
-submission._id
-)
-}
-style={{
-padding:"8px 14px",
-marginRight:"10px",
-background:"#dc2626",
-color:"#fff",
-border:"none",
-borderRadius:"6px",
-cursor:"pointer"
-}}
->
-Reject
-</button>
-
-</>
-
-)
-}
 
             <button
               onClick={() =>

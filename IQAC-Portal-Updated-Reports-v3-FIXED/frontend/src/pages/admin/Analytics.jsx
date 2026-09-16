@@ -176,9 +176,10 @@ function Analytics() {
 
   }
     const quarter =
-    analytics?.analytics?.[
-      selectedQuarter
-    ];
+      analytics?.analytics?.[selectedQuarter] || {
+        submitted: [], pending: [], approved: [], rejected: [], notSubmitted: [],
+        submittedCount: 0, pendingCount: 0, approvedCount: 0, rejectedCount: 0, notSubmittedCount: 0
+      };
 
   const summary = {
 
